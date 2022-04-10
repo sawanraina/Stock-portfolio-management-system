@@ -1,0 +1,332 @@
+{% load static %}
+ {% csrf_token %}
+<!DOCTYPE html>
+<!----Coded by Nirmiti-->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://kit.fontawesome.com/ea4e4d190f.js" crossorigin="anonymous"></script>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="{% static 'css/watchlist.css' %}">
+	<title>Watchlist</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!----------Nav side bar-->
+<div class="sidebar">
+	<div class="logo-details">
+	  <i class="bi bi-bar-chart-line-fill"></i>
+	  <span class="logo_name">Stock Portfolio</span>
+	</div>
+	<ul class="nav-links">
+		<li>
+		  <a href="{% url 'index' %}">
+			<i class='bx bxs-home' ></i>
+			<span class="links_name">Home</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'news' %}">
+			<i class='bx bx-box' ></i>
+			<span class="links_name">News</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'dashboard' %}">
+			<i class='bx bx-list-ul' ></i>
+			<span class="links_name">Dashboard</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'addportfolio' %}">
+			<i class='bx bx-user-plus'></i>
+			<span class="links_name">Add Portfolio</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'stock' %}">
+			<i class='bx bx-coin-stack' ></i>
+			<span class="links_name">Stock</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'mutualfunds' %}">
+			<i class='bx bx-pie-chart-alt-2' ></i>
+			<span class="links_name">Mutual Funds</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'watchlist' %}">
+			<i class='bx bx-book-alt' ></i>
+			<span class="links_name">Watch List</span>
+		  </a>
+		</li>
+		<li>
+		  <a href="{% url 'settings' %}">
+			<i class='bx bx-cog' ></i>
+			<span class="links_name">Setting</span>
+		  </a>
+		</li>
+		<li class="log_out">
+		  <a href="#">
+			<i class='bx bx-log-out'></i>
+			<span class="links_name">Log out</span>
+		  </a>
+		</li>
+	  </ul>
+  </div>
+<!----------hOME section-->
+	  <section class ="home-section">
+		<nav>
+		  <div class="sidebar-button">
+			<i class='bx bx-menu sidebarBtn'></i>
+			<span class="dashboard">Watchlist</span>
+		  </div>
+		  <div class="profile-details">
+        <span class="admin_name">{{username}}</span>
+      </div>
+	</nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+	<div class="container">
+		<div class="wrapper">
+		  <input type="text" name="search" id="search" placeholder="Type to search" autocomplete="chrome-off">
+		  <button><i class="fa fa-search"></i></button>
+		  <div class="results">
+			<ul style="max-height: 200px;
+    overflow-y: auto;">
+			</ul>
+		  </div>
+		</div>
+	  </div>
+
+	  <div style="overflow-x:auto;">
+		<table>
+		  <tr>
+				<th>Added on Date</th>
+				<th>Added on Price</th>
+				<th>Company</th>
+				<th>Live Price</th>
+				<th>CHG (Rs)</th>
+				<th>CHG (%)</th>
+				<th>State</th>
+		  </tr>
+		  {% for i in watchlistdata %}
+		  <tr >
+				<td>{{i.addeddate}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.addedprice}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.company}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.liveprice}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.change}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.perchange}}</td>
+				<td  data-toggle="modal" data-target="#{{i.company}}">{{i.state}}</td>
+		  </tr>
+
+		  {% endfor %}
+			</table>
+		</div>
+
+		<!-- <div id="line_top_x" style="width: 900px; height: 500px"></div> -->
+
+		{% for i in watchlistdata %}
+		<div class="modal fade" id="{{i.company}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLongTitle">{{i.company}}</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		      	<div style="overflow-x:auto;">
+              <div id="{{i.company}}graph" style="width: 500px; height: 500px"></div>
+            </div>
+		      </div>
+		      <div class="modal-footer">
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		{% endfor %}
+
+	</section>
+
+		
+
+
+				<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+				<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+				<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+				<script src="https://www.gstatic.com/charts/loader.js"></script>
+				<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+				<script>
+
+
+
+
+					
+
+
+							google.charts.load('current', {'packages':['line']});
+      						google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+    				var temp = {{watchlistdata|safe}};
+
+    		for(let i =0;i<temp.length;i++){
+
+
+
+    			var data = new google.visualization.DataTable();
+		      data.addColumn('number', 'Date');
+		      data.addColumn('number', 'EMA10');
+		      data.addColumn('number', 'EMA20');
+
+
+	      	val = []
+	      	for(let x = 0;x<temp[i].ema10.length;x++){
+	      		arr = []
+	      		arr.push(x+1);
+	      		arr.push(temp[i].ema10[x]);
+	      		arr.push(temp[i].ema20[x]);
+	      		val.push(arr);
+	      	}
+
+	      	console.log(val);
+						
+						
+	      
+		      data.addRows(
+		      	val
+		      );
+
+		      var options = {
+		        chart: {
+		          title: 'Box Office Earnings in First Two Weeks of Opening',
+		          subtitle: 'in millions of dollars (USD)'
+		        },
+		        width: 900,
+		        height: 500,
+		        axes: {
+		          x: {
+		            0: {side: 'top'}
+		          }
+		        },
+		        backgroundColor: '#F4F4F4',
+		        chartArea: {
+				    'backgroundColor': {
+				        'fill': '#F4F4F4',
+				        'opacity': 100
+				     },
+				 },
+		      };
+
+		      var stri = temp[i].company.toString() + "graph";
+
+		      var chart = new google.charts.Line(document.getElementById(stri));
+
+		      chart.draw(data, google.charts.Line.convertOptions(options));
+
+
+    		}
+	      
+    }
+
+
+
+
+
+
+
+
+
+					  let sidebar = document.querySelector(".sidebar");
+					 let sidebarBtn = document.querySelector(".sidebarBtn");
+					 sidebarBtn.onclick = function() {
+					   sidebar.classList.toggle("active");
+					   if(sidebar.classList.contains("active")){
+					   sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+					 }else
+					   sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+					 }
+					 let searchable = [
+					'RELIANCE','SBIN','HDFC','TCS','ACC','ONGC','SUMMITSEC', 'JSL', 'ASHOKLEY', 'BCG', 'ATFL', 'JAICORPLTD', 'LAKPRE', 'WSTCSTPAPR', 'SUTLEJTEX', 'DPSCLTD', 'L&TFH', 'CURATECH', 'SHRIPISTON', 'ANSALAPI', 'KELLTONTEC', 'BDL', 'DENORA', 'TIMETECHNO', 'TEXINFRA', 'MARATHON', 'ZUARIGLOB', 'SUPERSPIN', 'RAJSREESUG', 'SUNDRMBRAK', 'SFL', 'STCINDIA', 'AVTNPL', 'BEL', 'DHFL', 'SURANASOL', 'BUTTERFLY', 'RAJOIL', 'SGL', 'CREDITACC', 'LOKESHMACH', 'GUJNRECOKE', 'GULFPETRO', 'RAMSARUP', 'MINDTECK', 'HINDCOPPER', 'DBSTOCKBRO', 'SHK', 'UVSL', 'SALONA', 'PKTEA', 'NIACL', 'KAUSHALYA', 'TARAJEWELS', 'SIGIND', 'TORNTPOWER', 'PRADIP', 'ONWARDTEC', 'URJA', 'BHAGERIA', 'BLISSGVS', 'SIL', 'SIS', 'ALLCARGO', 'OLECTRA', 'BHANDARI', 'TATACOMM', 'REFEX', 'APCL', 'JUBLFOOD', 'SWANENERGY', 'OSWALAGRO', 'JSWSTEEL', 'M&MFIN', 'SOMATEX', 'HIMATSEIDE', 'V2RETAIL', 'HAVELLS', 'BIL', 'JMTAUTOLTD', 'WSI', 'VMART', 'BILENERGY', 'BSLIMITED', 'JVLAGRO', 'OCL', 'JISLDVREQS', 'PGEL', 'ORIENTPPR', 'PANAMAPET', 'SHRIRAMEPC', 'UFLEX', 'GESHIP', 'KHANDSE', 'IPAPPM', 'GODREJAGRO', 'BAYERCROP', 'NATCOPHARM', 'PNBGILTS', 'PGHH', 'SASKEN', 'MONTECARLO', 'RKFORGE', 'BFUTILITIE', 'FSC', 'MAHASTEEL', 'TANTIACONS', 'FSL', 'LPDC', 'INTEGRA', 'PRECOT', 'OILCOUNTUB', 'CCHHL', 'ARROWTEX', 'POWERGRID', 'CASTEXTECH', 'ELECTROSL', 'BIRLAMONEY', 'APEX', 'HINDALCO', 'SURANAT&P', 'AKSHARCHEM', 'DRREDDY', 'SHIVATEX', 'BLS', 'NATIONALUM', 'MANALIPETC', 'GABRIEL', 'AGROPHOS', 'BHARATRAS', 'COALINDIA', 'TECHNOE', 'HEXATRADEX', 'VENUSREM', 'PRSMJOHNSN', 'VIJIFIN', 'HEROMOTOCO', 'STINDIA', 'CONTROLPR', 'MUNJALAU', 'KARURVYSYA', 'RELIGARE', 'PGIL', 'HONDAPOWER', 'BIOFILCHEM', 'JSWHL', 'MOSERBAER', 'PITTIENG', 'MFSL', 'AHLWEST', 'IGARASHI', 'GALLANTT', 'PRIMESECU', 'MAITHANALL', 'ALBK', 'KITEX', 'TMRVL', 'MCDOWELL-N', 'TEAMLEASE', 'SPTL', 'OIL', 'RIIL', 'NETWORK18', 'BPL', 'RADICO', 'SRF', 'AMBUJACEM', 'GINNIFILA', 'ESSELPACK', 'SATHAISPAT', 'ZYDUSWELL', 'TVSMOTOR', 'PERSISTENT', 'ADHUNIKIND', 'IFBAGRO', 'ESCORTS', 'KCP', 'PROZONINTU', 'ASAHIINDIA', 'COROMANDEL', 'INDOSOLAR', 'VIKASECO', 'INVENTURE', 'MSPL', 'JSWENERGY', 'PPAP', 'CERA', 'GULFOILLUB', 'BANARISUG', 'ATUL', 'KIRIINDUS', 'BSE', 'SPYL', 'VASCONEQ', 'BSL', 'SUNPHARMA', 'MERCATOR', 'NEULANDLAB', 'LTTS', 'SALORAINTL', 'KEC', 'GUJAPOLLO', 'ANDHRABANK', 'CESC', 'INDIGO', 'KEI', 'KTKBANK', 'MEGASOFT', 'RUSHIL', 'BAJFINANCE', 'REGENCERAM', 'CEATLTD', 'INDIACEM', 'DELTAMAGNT', 'VINDHYATEL', 'CYBERMEDIA', 'MAGNUM', 'INDLMETER', 'HTMEDIA', 'BODALCHEM', 'METALFORGE', 'EQUITAS', 'SALZERELEC', 'MOIL', 'KICL', 'PRABHAT', 'KGL', 'DIXON', 'JYOTISTRUC', 'SALSTEEL', 'SANGHVIFOR', 'BALKRISIND', 'UTTAMSUGAR', '3PLAND', 'SDBL', 'NESCO', 'PLASTIBLEN', 'KHAITANLTD', 'PILITA', 'ARCHIDPLY', 'AARVEEDEN', 'DEEPAKFERT', 'SAKUMA', 'LYPSAGEMS', 'HDFC', 'JCHAC', 'HINDOILEXP', 'GMDCLTD', 'BBTC', 'CENTENKA', 'GAL', 'BAJAJHIND', 'TALWALKARS', 'SBILIFE', 'PRAKASH', 'SEZAL', 'MANINFRA', 'ZICOM', 'ITDC', 'CAPF', 'TVVISION', 'VOLTAS', 'ORIENTCEM', 'UNITECH', 'KAJARIACER', 'ARROWGREEN', 'SADBHAV', 'AGARIND', 'DIAPOWER', 'JPASSOCIAT', 'THANGAMAYL', 'PFOCUS', 'INFINITE', 'ASTRAMICRO', 'CGPOWER', 'RALLIS', 'INDRAMEDCO', 'KSERASERA', 'TARAPUR', 'HINDSYNTEX', 'AUROPHARMA', 'RNAVAL', 'GDL', 'LUMAXTECH', 'LOVABLE', 'PRECWIRE', 'SYNCOM', 'MUKTAARTS', 'KESORAMIND', 'GAEL', 'BHARATWIRE', 'AHLEAST', 'GOLDENTOBC', 'SAKHTISUG', 'GOLDIAM', 'TALWGYM', 'RAJRAYON', 'NOCIL', 'NIITLTD', 'PEARLPOLY', 'BRIGADE', 'WENDT', 'LCCINFOTEC', 'HDIL', 'MOHITIND'
+					];
+
+					const searchInput = document.getElementById('search');
+					const searchWrapper = document.querySelector('.wrapper');
+					const resultsWrapper = document.querySelector('.results');
+
+					searchInput.addEventListener('keyup', () => {
+					let results = [];
+					let input = searchInput.value;
+					if (input.length) {
+					results = searchable.filter((item) => {
+					  return item.toLowerCase().includes(input.toLowerCase());
+					});
+					}
+					renderResults(results);
+					});
+
+					function renderResults(results) {
+					if (!results.length) {
+					return searchWrapper.classList.remove('show');
+					}
+
+					const content = results
+					.map((item) => {
+					  return `<li onclick="addScrip('${item}')">${item}</li>`;
+					})
+					.join('');
+
+					searchWrapper.classList.add('show');
+					resultsWrapper.innerHTML = `<ul>${content}</ul>`;
+					}
+
+
+		function addScrip(arg){
+
+		        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+		        $.ajax({
+		            type:"POST",
+		            url:'{% url 'addscripwatchlist' %}',
+		            data:{
+		              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+		              'companyname':arg.toString(),
+		            },
+		            success :function(data){
+		                if(data.success){
+							        console.log(data.success);
+							        location.reload();
+		                }else{
+							        console.log(data.error);
+		                }
+		            }
+		        })
+				    return false;
+		}
+
+
+
+
+
+
+
+  </script>
+  
+  </body>
+</html>

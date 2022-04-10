@@ -1,0 +1,387 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<!-- code by Sawan Raina -->
+<html lang="en" dir="ltr">
+    <meta charset="UTF-8">
+    <title> Stocks </title>
+    <link rel="stylesheet" href="{% static 'css/Stock.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Mutual.css' %}">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bx-bar-chart-alt'></i>
+      <span class="logo_name">Stock Portfolio</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'index' %}">
+          <i class='bx bxs-home' ></i>
+          <span class="links_name">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'news' %}">
+          <i class='bx bx-box' ></i>
+          <span class="links_name">News</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-list-ul' ></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'addportfolio' %}">
+          <i class='bx bx-user-plus'></i>
+          <span class="links_name">Add Portfolio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'stock' %}">
+          <i class='bx bx-coin-stack' ></i>
+          <span class="links_name">Stock</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mutualfunds' %}">
+          <i class='bx bx-pie-chart-alt-2' ></i>
+          <span class="links_name">Mutual Funds</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'watchlist' %}">
+          <i class='bx bx-book-alt' ></i>
+          <span class="links_name">Watch List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'settings' %}">
+          <i class='bx bx-cog' ></i>
+          <span class="links_name">Setting</span>
+        </a>
+      </li>
+      <li class="log_out">
+        <a href="#">
+          <i class='bx bx-log-out'></i>
+          <span class="links_name">Log out</span>
+        </a>
+      </li>
+    </ul>
+</div>
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Stocks</span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Search...">
+        <i class='bx bx-search' ></i>
+
+      </div>
+      <div class="profile-details">
+        <span class="admin_name">User</span>
+        <i class='bx bx-chevron-down' ></i>
+      </div>
+    </nav>
+     
+<h2>Stock Table</h2>
+
+
+
+<h2 style="margin-top: 50px">Top Gainers</h2>
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+      <th>Company Name</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>LTP</th>
+      <th>Previous Price</th>
+      <th>Mkt cap(in Lakh.)</th>
+    </tr>
+    <tbody id="topgainerstable" class="topgainerstable">
+      
+    </tbody>
+  </table>
+</div>
+
+
+<h2>Top Losers</h2>
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+      <th>Company Name</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>LTP</th>
+      <th>Previous Price</th>
+      <th>Mkt cap(in Lakh.)</th>
+    </tr>
+    <tbody id="toploserstable" class="toploserstable">
+      
+    </tbody>
+  </table>
+</div>
+
+  <div class="search-input">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search Name..." id="searchstock" onkeyup="searchStockByName()">
+      <span class="input-group-append">
+        <button class="btn btn-primary" type="button">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+    <div class="row">
+        <ul class="autocom-box col-lg-4 col-xs-12 col-sm-12" id="autocom-box">
+          
+        </ul>
+    </div>
+  </div>
+    
+
+    <div class="row">
+                  <div class="col-12 my-auto">
+                    <div id="chartContainer"></div>
+                  </div>
+                </div>
+  
+
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script>
+          csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+          let sidebar = document.querySelector(".sidebar");
+         let sidebarBtn = document.querySelector(".sidebarBtn");
+         sidebarBtn.onclick = function() {
+           sidebar.classList.toggle("active");
+           if(sidebar.classList.contains("active")){
+           sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+         }else
+           sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+         }
+
+          topgainersrefresh();
+          toplosersrefresh();
+          
+
+
+         function topgainersrefresh(){
+
+          $.ajax({
+                type:"POST",
+                url:'{% url 'topgainers' %}',
+                data:{
+                  'csrfmiddlewaretoken': csrfmiddlewaretoken,
+                },
+                success :function(data){                  
+                  if(data.success){
+                      var topgainertable = document.querySelector(".topgainerstable");
+                      topgainertable.innerHTML = "";
+                      for(let i=0;i<5;i++){
+                        let tablerow = document.createElement('tr');
+
+                        let symbol = document.createElement('td');
+                        symbol.innerText = data.success.data[i].symbol;
+
+                        let open = document.createElement('td');
+                        open.innerText = data.success.data[i].openPrice;
+
+                        let high = document.createElement('td');
+                        high.innerText = data.success.data[i].highPrice;
+
+                        let close = document.createElement('td');
+                        close.innerText = data.success.data[i].ltp;
+
+                        let prevClose = document.createElement('td');
+                        prevClose.innerText = data.success.data[i].previousPrice;
+
+                        let volume = document.createElement('td');
+                        volume.innerText = data.success.data[i].turnoverInLakhs;
+
+                        tablerow.append(symbol,open,high,close,prevClose,volume);
+                        topgainertable.append(tablerow);
+                      }
+                     }
+                     else{
+                     console.log(data.error);
+
+                      var topgainertable = document.querySelector(".topgainerstable");
+                      topgainertable.innerHTML = "";
+                      let tablerow = document.createElement('tr');
+                      let error = document.createElement('td');
+                      error.innerText = data.error;
+                      error.setAttribute("colspan", "6");
+                      tablerow.append(error);
+                      topgainertable.append(tablerow);
+                     }
+                  }
+                })
+              return false;
+            }
+
+        function toplosersrefresh(){
+          $.ajax({
+                type:"POST",
+                url:'{% url 'toplosers' %}',
+                data:{
+                  'csrfmiddlewaretoken': csrfmiddlewaretoken,
+                },
+                success :function(data){
+                if(data.success){
+                    let toplosertable = document.querySelector(".toploserstable");
+                    toplosertable.innerText = "";
+                    for(let i=0;i<5;i++){
+                      let tablerow = document.createElement('tr');
+
+                      let symbol = document.createElement('td');
+                      symbol.innerText = data.success.data[i].symbol;
+
+                      let open = document.createElement('td');
+                      open.innerText = data.success.data[i].openPrice;
+
+                      let high = document.createElement('td');
+                      high.innerText = data.success.data[i].highPrice;
+
+                      let close = document.createElement('td');
+                      close.innerText = data.success.data[i].ltp;
+
+                      let prevClose = document.createElement('td');
+                      prevClose.innerText = data.success.data[i].previousPrice;
+
+                      let volume = document.createElement('td');
+                      volume.innerText = data.success.data[i].tradedQuantity;
+
+                      tablerow.append(symbol,open,high,close,prevClose,volume);
+                      toplosertable.append(tablerow);
+                    }
+                   }
+                   else{
+                   console.log(data.error);
+                    let toplosertable = document.querySelector(".toploserstable");
+                    toplosertable.innerText = "";
+                    let tablerow = document.createElement('tr');
+                    let error = document.createElement('td');
+                    error.innerText = data.error;
+                    error.setAttribute("colspan", "6");
+                    tablerow.append(error);
+                    toplosertable.append(tablerow);
+                   }
+                }
+            })
+          return false;
+        }
+
+
+      const searchWrapper = document.querySelector(".search-input");
+      const inputBox = searchWrapper.querySelector("input");
+      const suggBox = searchWrapper.querySelector(".autocom-box");
+      var scripList ;
+      scripList =  {{data.allscripname|safe}}
+      
+
+      function searchStockByName(){
+          console.log(scripList);
+          let userData = document.getElementById("searchstock").value;
+          let emptyArray = [];
+          if(userData){
+              emptyArray = scripList.filter((data)=>{
+                  return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+              });
+              emptyArray = emptyArray.map((data)=>{
+                  return data = `<li>${data}</li>`;
+              });
+              searchWrapper.classList.add("active");
+
+              showStockSuggestions(emptyArray);
+              let allList = suggBox.querySelectorAll("li");
+              for (let i = 0; i < allList.length; i++) {
+                  allList[i].setAttribute("name", "this.innerText");
+                  allList[i].setAttribute("onclick", "searchStockName(this.innerText)");
+              }
+          }else{
+              searchWrapper.classList.remove("active");
+          }
+      }
+
+      function showStockSuggestions(list){
+          let listData;
+          if(!list.length){
+              userValue = inputBox.value;
+              listData = `<li>${userValue}</li>`;
+          }else{
+            listData = list.join('');
+          }
+          suggBox.innerHTML = listData;
+      }
+
+
+
+      function searchStockName(element){
+          console.log(element);
+          searchWrapper.classList.remove("active");
+          $.ajax({
+            type:"POST",
+            url:'{% url 'stockdata' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'scripname': element,
+            },
+            success :function(data){
+              console.log(data);
+            if(!data.success.error && data.success.data.length > 0){
+
+              google.charts.load('current', {'packages':['line']});
+              google.charts.setOnLoadCallback(drawChart);
+
+              function drawChart() {
+
+                var points = new google.visualization.DataTable();
+                points.addColumn('string', 'Day');
+                points.addColumn('number', 'Close');
+                var arr = []
+
+                for(let i =0;i<data.success.data.length;i++){
+                  var x = []
+                  x.push(data.success.data[i].mTIMESTAMP);
+                  x.push(data.success.data[i].CH_CLOSING_PRICE);
+                  arr.push(x);
+                }
+
+                points.addRows(arr);
+
+                var options = {
+                  chart: {
+                    title: element,
+                    /*subtitle: 'in millions of dollars (USD)'*/
+                  },
+                  width: 1500,
+                  height: 500
+                };
+
+                var chart = new google.charts.Line(document.getElementById('chartContainer'));
+
+                chart.draw(points, google.charts.Line.convertOptions(options));
+                }
+               }
+               else{
+               console.log("Error Data: "+data.success.showMessage);
+               }
+            }
+        })
+      }
+
+
+
+
+      </script>
+     
+     </body>
+     </html>

@@ -1,0 +1,618 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!-- code by Sawan Raina -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>  Dashboard  </title>
+    <link rel="stylesheet" href="{% static 'css/Dashboard.css' %}">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   </head>
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bx-bar-chart-alt'></i>
+      <span class="logo_name">Stock Portfolio</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'index' %}">
+          <i class='bx bxs-home' ></i>
+          <span class="links_name">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'news' %}">
+          <i class='bx bx-box' ></i>
+          <span class="links_name">News</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-list-ul' ></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'addportfolio' %}">
+          <i class='bx bx-user-plus'></i>
+          <span class="links_name">Add Portfolio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'stock' %}">
+          <i class='bx bx-coin-stack' ></i>
+          <span class="links_name">Stock</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mutualfunds' %}">
+          <i class='bx bx-pie-chart-alt-2' ></i>
+          <span class="links_name">Mutual Funds</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'watchlist' %}">
+          <i class='bx bx-book-alt' ></i>
+          <span class="links_name">Watch List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'settings' %}">
+          <i class='bx bx-cog' ></i>
+          <span class="links_name">Setting</span>
+        </a>
+      </li>
+      <li class="log_out">
+        <a onclick="return logout()">
+          <i class='bx bx-log-out'></i>
+          <span class="links_name">Log out</span>
+        </a>
+      </li>
+    </ul>
+</div>
+
+  <div class="modal fade" id="stockmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Dashboard</span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Search...">
+        <i class='bx bx-search' ></i>
+      </div>
+      <div class="profile-details">
+        <span class="admin_name">{{username}}</span>
+      </div>
+    </nav>
+
+    {% csrf_token %}
+    <div class="home-content">
+      <div class="overview-boxes">
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Current Value</div>
+            <div class="number">&#8377 {{dashboardhead.currentinvestmentCost}}</div>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">Up from yesterday</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Investment Cost</div>
+            <div class="number">&#8377 {{dashboardhead.investmentCost}}</div>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">Up from yesterday</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">TODAY'S GAIN/LOSS</div>
+            <div class="number text-success" id="invnumber">&#8377 0.0</div>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">Up from yesterday</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">NOTIONAL GAIN/LOSS</div>
+            <div class="number text-danger">&#8377 {{dashboardhead.notionalcost}}</div>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt'></i>
+              <span class="text">Up from yesterday</span>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="right-side">
+            <div class="box-topic">Total Realized Gain/Loss</div>
+            <div class="number">&#8377 0.0</div>
+            <div class="indicator">
+              <i class='bx bx-up-arrow-alt '></i>
+              <span class="text">Up From Today</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+
+      <div class="sales-boxes">
+        <div class="recent-sales box">
+          <div class="title">All Portfolio</div>
+          <div class="sales-details">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Portfolio Name</th>
+                  <th scope="col">Current Value</th>
+                  <th scope="col">Today's Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for e in portfoliodata %}
+                <tr data-toggle="collapse" data-target="#{{e.portfolioname| cut:" "}}" class="accordion-toggle" onclick="openPortfolioDetails(this)">
+                  <td>{{e.portfolioname}}</td>
+                  <td>12.8</td>
+                  <td class="text-danger">0.67</td>
+                </tr>
+                <tr class="accordian-body collapse" id="{{e.portfolioname| cut:" "}}">
+                  <td colspan="3">
+                    <table class="table table-striped">
+                      <tbody>
+                        <tr class="table-active">
+                          <td>Stocks</td>
+                          <td><a href="#" onclick="openaddStock()">Add</a></td>
+                        </tr>
+                        <tr class="table-active">
+                          <td>MF's</td>
+                          <td><a href="#" onclick="openaddmutual()">Add</a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% for e in portfoliodata %}
+          <div class="top-sales box portfolio-details" id="{{e.portfolioname}}portfoliodetails" style="display: none;">
+            <div class="title">{{e.portfolioname}}</div>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Asset Type</th>
+                    <th>Current Valuation</th>
+                    <th>Amount Invested</th>
+                    <th>Today's Gain/Loss</th>
+                    <th>Total National Gain/Loss</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-toggle="modal" data-target="#{{e.portfolioname}}stock">
+                    <td>Stocks</td>
+                    <td>{{allstock.currentvaluation}}</td>
+                    <td>{{allstock.totalinvested}}</td>
+                    <td>0.0</td>
+                    <td>{{allstock.notionalgainloss}}</td>
+                  </tr>
+                  <tr>
+                    <td>Mutual Funds</td>
+                    <td colspan="6"><a href="#" onclick="openaddmutual()">Add Mutual Funds to Portfolio</a></td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+        {% endfor %}
+        
+
+
+        {% for e in portfoliodata %}
+        <div class="modal fade" id="{{e.portfolioname}}stock" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">{{i.company}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div style="overflow-x:auto;">
+                <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>LTP</th>
+                    <th>Quantity</th>
+                    <th>Avg. Cost</th>
+                    <th>Amount Invested</th>
+                    <th>Current Networth</th>
+                    <th>National Gain/Loss</th>
+                    <th>Target Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in stockdetails %}
+                  <tr data-toggle="modal" data-target="#stockpopup">
+                    <td>{{i.companyname}}</td>
+                    <td>{{i.ltp}}</td>
+                    <td>{{i.quantity}}</td>
+                    <td>{{i.avginvest}}</td>
+                    <td>{{i.amountinvest}}</td>
+                    <td>{{i.currentvoworth}}</td>
+                    <td>{{i.notionalgainloss}}</td>
+                    <td>{{i.target}}</td>
+                  </tr>
+                   {% endfor %}
+                </tbody>
+              </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}  
+
+       
+
+
+
+        <div class="top-sales box stock-box" id="stock-box">
+          <div>Add Stock to Portfolio</div>
+          <form>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Company Name</th>
+                  <th>Type</th>
+                  <th>Exchange type</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Target Price</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="date" name="date" id="stockdate"></td>
+                  <td><input type="text" name="companyname" id="companyname" placeholder="Company Name"></td>
+                  <td>
+                    <select name="type" id="type">
+                      <option value="buy">BUY</option>
+                      <option value="sell">SELL</option>
+                      <option value="rights">RIGHTS</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select name="exchange" id="exchange">
+                      <option value="nse">NSE</option>
+                      <option value="bse">BSE</option>
+                    </select>
+                  </td>
+                  <td><input type="text" name="quantity" placeholder="Quantity" id="quantity"></td>
+                  <td><input type="text" name="price" placeholder="price" id="stockprice" onChange="getPrice();"></td>
+                  <td><input type="text" name="targetprice" placeholder="Target Price" id="targetprice"></td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="wrapper">
+                    <div class="results">
+                        <ul class="verticalscroll">
+                        </ul>
+                      </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><button onclick="return addstock()">Save and Countinue</button></td>
+                  <td><button onclick="return addstock()">Save and Add Stock</button></td>
+                </tr>
+              </tfoot>
+            </table>
+          </form>
+        </div>
+
+        <div class="top-sales box mutualfund-box" id="mutualfund-box">
+          <div>Add Mutual to Portfolio</div>
+          <form>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Units</th>
+                  <th>Nav</th>
+                  <th>Amount No</th>
+                  <th>Folio No</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="date" name="date" id="mfdate"></td>
+                  <td>
+                    <select name="type" id="mftype">
+                      <option value="buy">BUY</option>
+                      <option value="sell">SELL</option>
+                    </select>
+                  </td>
+                  <td><input type="number" name="units" placeholder="Units" id="mfunits"></td>
+                  <td><input type="number" name="nav" placeholder="Nav" id="mfnav"></td>
+                  <td><input type="text" name="amount" placeholder="Amount" id="mfamount"></td>
+                  <td><input type="text" name="foliono" placeholder="Folio No" id="mffoliono"></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><button onclick="return addmutualfund()">Save and Countinue</button></td>
+                  <td colspan="2"><button>Save and Add MF</button></td>
+                </tr>
+              </tfoot>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+    let sidebar = document.querySelector(".sidebar");
+    let sidebarBtn = document.querySelector(".sidebarBtn");
+    sidebarBtn.onclick = function() {
+      sidebar.classList.toggle("active");
+      if(sidebar.classList.contains("active")){
+      sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+    }else
+      sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+    }
+
+
+    let searchable = [
+          'RELIANCE','SBIN','HDFC','TCS','ACC','ONGC','SUMMITSEC', 'JSL', 'ASHOKLEY', 'BCG', 'ATFL', 'JAICORPLTD', 'LAKPRE', 'WSTCSTPAPR', 'SUTLEJTEX', 'DPSCLTD', 'L&TFH', 'CURATECH', 'SHRIPISTON', 'ANSALAPI', 'KELLTONTEC', 'BDL', 'DENORA', 'TIMETECHNO', 'TEXINFRA', 'MARATHON', 'ZUARIGLOB', 'SUPERSPIN', 'RAJSREESUG', 'SUNDRMBRAK', 'SFL', 'STCINDIA', 'AVTNPL', 'BEL', 'DHFL', 'SURANASOL', 'BUTTERFLY', 'RAJOIL', 'SGL', 'CREDITACC', 'LOKESHMACH', 'GUJNRECOKE', 'GULFPETRO', 'RAMSARUP', 'MINDTECK', 'HINDCOPPER', 'DBSTOCKBRO', 'SHK', 'UVSL', 'SALONA', 'PKTEA', 'NIACL', 'KAUSHALYA', 'TARAJEWELS', 'SIGIND', 'TORNTPOWER', 'PRADIP', 'ONWARDTEC', 'URJA', 'BHAGERIA', 'BLISSGVS', 'SIL', 'SIS', 'ALLCARGO', 'OLECTRA', 'BHANDARI', 'TATACOMM', 'REFEX', 'APCL', 'JUBLFOOD', 'SWANENERGY', 'OSWALAGRO', 'JSWSTEEL', 'M&MFIN', 'SOMATEX', 'HIMATSEIDE', 'V2RETAIL', 'HAVELLS', 'BIL', 'JMTAUTOLTD', 'WSI', 'VMART', 'BILENERGY', 'BSLIMITED', 'JVLAGRO', 'OCL', 'JISLDVREQS', 'PGEL', 'ORIENTPPR', 'PANAMAPET', 'SHRIRAMEPC', 'UFLEX', 'GESHIP', 'KHANDSE', 'IPAPPM', 'GODREJAGRO', 'BAYERCROP', 'NATCOPHARM', 'PNBGILTS', 'PGHH', 'SASKEN', 'MONTECARLO', 'RKFORGE', 'BFUTILITIE', 'FSC', 'MAHASTEEL', 'TANTIACONS', 'FSL', 'LPDC', 'INTEGRA', 'PRECOT', 'OILCOUNTUB', 'CCHHL', 'ARROWTEX', 'POWERGRID', 'CASTEXTECH', 'ELECTROSL', 'BIRLAMONEY', 'APEX', 'HINDALCO', 'SURANAT&P', 'AKSHARCHEM', 'DRREDDY', 'SHIVATEX', 'BLS', 'NATIONALUM', 'MANALIPETC', 'GABRIEL', 'AGROPHOS', 'BHARATRAS', 'COALINDIA', 'TECHNOE', 'HEXATRADEX', 'VENUSREM', 'PRSMJOHNSN', 'VIJIFIN', 'HEROMOTOCO', 'STINDIA', 'CONTROLPR', 'MUNJALAU', 'KARURVYSYA', 'RELIGARE', 'PGIL', 'HONDAPOWER', 'BIOFILCHEM', 'JSWHL', 'MOSERBAER', 'PITTIENG', 'MFSL', 'AHLWEST', 'IGARASHI', 'GALLANTT', 'PRIMESECU', 'MAITHANALL', 'ALBK', 'KITEX', 'TMRVL', 'MCDOWELL-N', 'TEAMLEASE', 'SPTL', 'OIL', 'RIIL', 'NETWORK18', 'BPL', 'RADICO', 'SRF', 'AMBUJACEM', 'GINNIFILA', 'ESSELPACK', 'SATHAISPAT', 'ZYDUSWELL', 'TVSMOTOR', 'PERSISTENT', 'ADHUNIKIND', 'IFBAGRO', 'ESCORTS', 'KCP', 'PROZONINTU', 'ASAHIINDIA', 'COROMANDEL', 'INDOSOLAR', 'VIKASECO', 'INVENTURE', 'MSPL', 'JSWENERGY', 'PPAP', 'CERA', 'GULFOILLUB', 'BANARISUG', 'ATUL', 'KIRIINDUS', 'BSE', 'SPYL', 'VASCONEQ', 'BSL', 'SUNPHARMA', 'MERCATOR', 'NEULANDLAB', 'LTTS', 'SALORAINTL', 'KEC', 'GUJAPOLLO', 'ANDHRABANK', 'CESC', 'INDIGO', 'KEI', 'KTKBANK', 'MEGASOFT', 'RUSHIL', 'BAJFINANCE', 'REGENCERAM', 'CEATLTD', 'INDIACEM', 'DELTAMAGNT', 'VINDHYATEL', 'CYBERMEDIA', 'MAGNUM', 'INDLMETER', 'HTMEDIA', 'BODALCHEM', 'METALFORGE', 'EQUITAS', 'SALZERELEC', 'MOIL', 'KICL', 'PRABHAT', 'KGL', 'DIXON', 'JYOTISTRUC', 'SALSTEEL', 'SANGHVIFOR', 'BALKRISIND', 'UTTAMSUGAR', '3PLAND', 'SDBL', 'NESCO', 'PLASTIBLEN', 'KHAITANLTD', 'PILITA', 'ARCHIDPLY', 'AARVEEDEN', 'DEEPAKFERT', 'SAKUMA', 'LYPSAGEMS', 'HDFC', 'JCHAC', 'HINDOILEXP', 'GMDCLTD', 'BBTC', 'CENTENKA', 'GAL', 'BAJAJHIND', 'TALWALKARS', 'SBILIFE', 'PRAKASH', 'SEZAL', 'MANINFRA', 'ZICOM', 'ITDC', 'CAPF', 'TVVISION', 'VOLTAS', 'ORIENTCEM', 'UNITECH', 'KAJARIACER', 'ARROWGREEN', 'SADBHAV', 'AGARIND', 'DIAPOWER', 'JPASSOCIAT', 'THANGAMAYL', 'PFOCUS', 'INFINITE', 'ASTRAMICRO', 'CGPOWER', 'RALLIS', 'INDRAMEDCO', 'KSERASERA', 'TARAPUR', 'HINDSYNTEX', 'AUROPHARMA', 'RNAVAL', 'GDL', 'LUMAXTECH', 'LOVABLE', 'PRECWIRE', 'SYNCOM', 'MUKTAARTS', 'KESORAMIND', 'GAEL', 'BHARATWIRE', 'AHLEAST', 'GOLDENTOBC', 'SAKHTISUG', 'GOLDIAM', 'TALWGYM', 'RAJRAYON', 'NOCIL', 'NIITLTD', 'PEARLPOLY', 'BRIGADE', 'WENDT', 'LCCINFOTEC', 'HDIL', 'MOHITIND'
+          ];
+
+          const searchInput = document.getElementById('companyname');
+          const searchWrapper = document.querySelector('.wrapper');
+          const resultsWrapper = document.querySelector('.results');
+
+          searchInput.addEventListener('keyup', () => {
+          let results = [];
+          let input = searchInput.value;
+          if (input.length) {
+          results = searchable.filter((item) => {
+            return item.toLowerCase().includes(input.toLowerCase());
+          });
+          }
+          renderResults(results);
+          });
+
+          function renderResults(results) {
+          if (!results.length) {
+          return searchWrapper.classList.remove('show');
+          }
+
+          const content = results
+          .map((item) => {
+            return `<li onclick="getPrice('${item}')">${item}</li>`;
+          })
+          .join('');
+
+          searchWrapper.classList.add('show');
+          resultsWrapper.innerHTML = `<ul>${content}</ul>`;
+          }
+
+
+    var PORTFOLIO_NAME = "";
+
+
+
+
+    function openaddStock(){
+      document.getElementById("stock-box").style.display = "block";
+      document.getElementById(PORTFOLIO_NAME+"portfoliodetails").style.display = "none";
+      document.getElementById("mutualfund-box").style.display = "none";
+
+      document.getElementById("invnumber").innerHTML = "55";
+    }
+
+    function openPortfolioDetails(arg){
+      if(PORTFOLIO_NAME != ""){
+        document.getElementById(PORTFOLIO_NAME+"portfoliodetails").style.display = "none";
+      }
+      
+      PORTFOLIO_NAME = arg.querySelector("td").innerHTML;
+      console.log(PORTFOLIO_NAME);
+      document.getElementById("stock-box").style.display = "none";
+      document.getElementById("mutualfund-box").style.display = "none";
+      document.getElementById(PORTFOLIO_NAME+"portfoliodetails").style.display = "block";
+    }
+
+
+    function openaddmutual(){
+      document.getElementById("mutualfund-box").style.display = "block";
+      document.getElementById("stock-box").style.display = "none";
+      document.getElementById(PORTFOLIO_NAME+"portfoliodetails").style.display = "none";
+    }
+
+    function addstock(){
+
+        var date = document.getElementById("stockdate").value;
+        //var portfolioname = document.getElementById("date").value;
+        var companyname = document.getElementById("companyname").value;
+        var type = document.getElementById("type").value;
+        var exchange = document.getElementById("exchange").value;
+        var quantity = document.getElementById("quantity").value;
+        var price = document.getElementById("stockprice").value;
+        var targetprice = document.getElementById("targetprice").value;
+
+        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        console.log(PORTFOLIO_NAME);
+        $.ajax({
+            type:"POST",
+            url:'{% url 'addstock' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'date':date,
+              'portfolioname':PORTFOLIO_NAME,
+              'companyname':companyname,
+              'type':type,
+              'exchange':exchange,
+              'quantity':quantity,
+              'price':price,
+              'targetprice':targetprice,
+            },
+            success :function(data){
+                if(data.success){
+					        console.log(data.success);
+                  document.getElementById("companyname").value = "";
+                  document.getElementById("quantity").value = "";
+                  document.getElementById("stockprice").value = "";
+                  document.getElementById("targetprice").value = "";
+                }else{
+					        console.log(data.error);
+                }
+            }
+        })
+		    return false;
+
+    }
+
+
+    function addmutualfund(){
+        var date = document.getElementById("mfdate").value;
+        var type = document.getElementById("mftype").value;
+        var units = document.getElementById("mfunits").value;
+        var nav = document.getElementById("mfnav").value;
+        var amount = document.getElementById("mfamount").value;
+        var foliono = document.getElementById("mffoliono").value;
+
+        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        console.log(PORTFOLIO_NAME);
+        $.ajax({
+            type:"POST",
+            url:'{% url 'addmf' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'date':date,
+              'portfolioname':PORTFOLIO_NAME,
+              'type':type,
+              'units':units,
+              'nav':nav,
+              'amount':amount,
+              'foliono':foliono,
+            },
+            success :function(data){
+                if(data.success){
+					        console.log(data.success);
+                  document.getElementById("mfunits").value = "";
+                  document.getElementById("mfnav").value = "";
+                  document.getElementById("mfamount").value = "";
+                  document.getElementById("mffoliono").value = "";
+                }else{
+					        console.log(data.error);
+                }
+            }
+        })
+		    return false;
+    }
+
+    function getPrice(arg){
+      document.getElementById("companyname").value = "";
+      document.getElementById("companyname").value = arg;
+        var date = document.getElementById("stockdate").value;
+        var companyname = document.getElementById("companyname").value;
+
+        console.log(date)
+
+        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        console.log(PORTFOLIO_NAME);
+        $.ajax({
+            type:"POST",
+            url:'{% url 'getprice' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'date':date,
+              'companyname':companyname,
+            },
+            success :function(data){
+                if(data.success){
+                  console.log(data.success);
+                  document.getElementById("stockprice").value = data.success;
+                }else{
+                  console.log(data.error);
+                }
+            }
+        })
+        return false;
+    }
+
+    function logout(){
+        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        console.log(PORTFOLIO_NAME);
+        $.ajax({
+            type:"POST",
+            url:'{% url 'logout' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+            },
+            success :function(data){
+                if(data.success){
+                  window.location = '{% url 'index' %}';
+                }else{
+                  console.log(data.error);
+                }
+            }
+        })
+        return false;
+    }
+
+ </script>
+
+</body>
+</html>

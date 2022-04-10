@@ -1,0 +1,433 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!-- code by Sawan Raina -->
+<html lang="en" dir="ltr">
+    <meta charset="UTF-8">
+    <title> Mutual Funds </title>
+    <link rel="stylesheet" href="{% static 'css/Mutual.css' %}">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bx-bar-chart-alt'></i>
+      <span class="logo_name">Stock Portfolio</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'index' %}">
+          <i class='bx bxs-home' ></i>
+          <span class="links_name">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'news' %}">
+          <i class='bx bx-box' ></i>
+          <span class="links_name">News</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-list-ul' ></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'addportfolio' %}">
+          <i class='bx bx-user-plus'></i>
+          <span class="links_name">Add Portfolio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'stock' %}">
+          <i class='bx bx-coin-stack' ></i>
+          <span class="links_name">Stock</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mutualfunds' %}">
+          <i class='bx bx-pie-chart-alt-2' ></i>
+          <span class="links_name">Mutual Funds</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'watchlist' %}">
+          <i class='bx bx-book-alt' ></i>
+          <span class="links_name">Watch List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'settings' %}">
+          <i class='bx bx-cog' ></i>
+          <span class="links_name">Setting</span>
+        </a>
+      </li>
+      <li class="log_out">
+        <a href="#">
+          <i class='bx bx-log-out'></i>
+          <span class="links_name">Log out</span>
+        </a>
+      </li>
+    </ul>
+</div>
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Mutual Funds</span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Search...">
+        <i class='bx bx-search' ></i>
+      </div>
+      <div class="profile-details">
+        <span class="admin_name">{{username}}</span>
+      </div>
+    </nav>
+     
+   
+<h2>Large Cap Fund</h2>
+
+
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+      <th>Scheme  Name</th>
+      <th>AUM (Cr)</th>
+      <th>1 M</th>
+      <th>6 M</th>
+      <th>1 Y</th>
+      <th>3 Y</th>
+      <th>5 Y</th>
+     
+    </tr>
+    <tr>
+      <td>IDBI India Top 100 Eqty-Direct (G)</td>
+      <td>19.30</td>
+      <td>3.50 %</td>
+      <td>17.30 %</td>
+      <td>49.10 %</td>
+      <td>16.30 %</td>
+      <td>13.80 %</td>
+    </tr>
+     <tr>
+      <td>Tata large Cap fund- Direct (G)</td>
+      <td>101.50</td>
+      <td>3.20 %</td>
+      <td>18.30 %</td>
+      <td>48.20 %</td>
+      <td>14.30 %</td>
+      <td>13.50 %</td>
+    </tr>
+     <tr>
+      <td>IDBI India Top 100 Equity Fund(G)</td>
+      <td>397.87</td>
+      <td>3.40 %</td>
+      <td>16.60 %</td>
+      <td>47.40 %</td>
+      <td>14.80 %</td>
+      <td>12.10 %</td>
+    </tr>
+     <tr>
+      <td>CR Bluechip Equity Fund-D(G)</td>
+      <td>431.65</td>
+      <td>2.50 %</td>
+      <td>13.30 %</td>
+      <td>45.50 %</td>
+      <td>18.40 %</td>
+      <td>17.70 %</td>
+    </tr>
+     <tr>
+      <td>Edelwelss Large Cap- Direct (G)</td>
+      <td>32.09</td>
+      <td>3.30 %</td>
+      <td>13.10 %</td>
+      <td>44.40 %</td>
+      <td>14.10 %</td>
+      <td>15.20 %</td>
+    </tr>
+     
+     </table>
+</div>
+
+<h3>Multi cap fund</h3>
+
+
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+        <th>Scheme  Name</th>
+        <th>AUM (Cr)</th>
+        <th>1 M</th>
+        <th>6 M</th>
+        <th>1 Y</th>
+        <th>3 Y</th>
+        <th>5 Y</th>
+       
+      </tr>
+      <tr>
+        <td>UTI Flexi Cap Fund-DP-(G)</td>
+        <td>1,860.20</td>
+        <td>4.20 %</td>
+        <td>17.00 %</td>
+        <td>64.20 %</td>
+        <td>18.80 %</td>
+        <td>17.90 %</td>
+      </tr>
+       <tr>
+        <td>UTI Flexi Cap Fund-RP-(G)</td>
+        <td>14,032.75</td>
+        <td>4.20 %</td>
+        <td>16.50 %</td>
+        <td>63.00 %</td>
+        <td>18.10 %</td>
+        <td>17.20 %</td>
+      </tr>
+       <tr>
+        <td>DSP Flexi Cap Fund-DP-(G)</td>
+        <td>729.87</td>
+        <td>4.60 %</td>
+        <td>21.70 %</td>
+        <td>59.30 %</td>
+        <td>19.70 %</td>
+        <td>18.00 %</td>
+      </tr>
+       <tr>
+        <td>DSP Flexi Cap Fund-RP-(G)</td>
+        <td>4,142.23</td>
+        <td>4.50 %</td>
+        <td>21.20 %</td>
+        <td>57.70 %</td>
+        <td>18.60 %</td>
+        <td>17.00 %</td>
+      </tr>
+       <tr>
+        <td>Union Equity Fund- Direct (G)</td>
+        <td>16.57</td>
+        <td>4.70 %</td>
+        <td>21.10 %</td>
+        <td>55.90 %</td>
+        <td>17.60 %</td>
+        <td>15.30 %</td>
+      </tr>
+     </table>
+</div>
+
+<h4>Mid cap fund</h4>
+
+
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+        <th>Scheme  Name</th>
+        <th>AUM (Cr)</th>
+        <th>1 M</th>
+        <th>6 M</th>
+        <th>1 Y</th>
+        <th>3 Y</th>
+        <th>5 Y</th>
+       
+      </tr>
+      <tr>
+        <td>Tata Mid Cap Growth-Direct (G)</td>
+        <td>99.20</td>
+        <td>6.40 %</td>
+        <td>26.90 %</td>
+        <td>70.90 %</td>
+        <td>22.20 %</td>
+        <td>17.70 %</td>
+      </tr>
+       <tr>
+        <td>Invesco India Midcap- Direct (G)</td>
+        <td>244.85</td>
+        <td>8.10 %</td>
+        <td>26.90 %</td>
+        <td>66.40 %</td>
+        <td>21.60 %</td>
+        <td>19.40 %</td>
+      </tr>
+       <tr>
+        <td>Invesco India Midcap-(G)</td>
+        <td>1,077.40</td>
+        <td>8.00 %</td>
+        <td>25.90 %</td>
+        <td>63.80 %</td>
+        <td>19.80 %</td>
+        <td>17.50 %</td>
+      </tr>
+       <tr>
+        <td>Axis Mid Cap Fund-D(G)</td>
+        <td>2,910.39</td>
+        <td>5.10 %</td>
+        <td>25.10 %</td>
+        <td>63.40 %</td>
+        <td>22.60 %</td>
+        <td>20.90 %</td>
+      </tr>
+       <tr>
+        <td>Taurus Discovery(Midcap)-Direct (G)</td>
+        <td>1.26</td>
+        <td>4.00 %</td>
+        <td>27.50 %</td>
+        <td>62.90 %</td>
+        <td>17.50 %</td>
+        <td>17.20 %</td>
+      </tr>
+     </table>
+</div>
+
+<h5>Small cap fund</h5>
+
+
+<div style="overflow-x:auto;">
+  <table>
+    <tr>
+        <th>Scheme  Name</th>
+        <th>AUM (Cr)</th>
+        <th>1 M</th>
+        <th>6 M</th>
+        <th>1 Y</th>
+        <th>3 Y</th>
+        <th>5 Y</th>
+       
+      </tr>
+      <tr>
+        <td>Union SCF-DP(G)</td>
+        <td>15.71</td>
+        <td>11.20 %</td>
+        <td>44.20 %</td>
+        <td>104.80 %</td>
+        <td>24.20 %</td>
+        <td>17.10 %</td>
+      </tr>
+       <tr>
+        <td>Union SCF-RP(G)</td>
+        <td>402.49</td>
+        <td>11.10 %</td>
+        <td>43.70 %</td>
+        <td>103.10 %</td>
+        <td>23.30 %</td>
+        <td>16.20 %</td>
+      </tr>
+       <tr>
+        <td>Axis Small Cap Fund-D(G)</td>
+        <td>1,529.20</td>
+        <td>9.40 %</td>
+        <td>38.90 %</td>
+        <td>90.40 %</td>
+        <td>29.20 %</td>
+        <td>22.60 %</td>
+      </tr>
+       <tr>
+        <td>Axis Small Cap Fund-(G)</td>
+        <td>2,541.05</td>
+        <td>9.20 %</td>
+        <td>37.90 %</td>
+        <td>87.30 %</td>
+        <td>27.30 %</td>
+        <td>21.00 %</td>
+      </tr>
+       <tr>
+        <td>SBI Small Cap Fund- D(G)</td>
+        <td>2,317.48</td>
+        <td>4.70 %</td>
+        <td>31.10 %</td>
+        <td>86.50 %</td>
+        <td>24.90 %</td>
+        <td>23.30 %</td>
+      </tr>
+     </table>
+</div>
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+  var dataPoints = [], currentDate = new Date(), rangeChangedTriggered = false;
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    theme: "dark1", //"light2", "dark1", "dark2"
+    title:{
+      text:"Dynamic StockChart"
+    },
+    rangeChanged: function(e) {
+        rangeChangedTriggered = true;
+    },
+    charts: [{
+      axisX: {
+        crosshair: {
+          enabled: true,
+          valueFormatString: "MMM DD, YYYY HH:mm:ss"
+        }
+      },
+      axisY: {
+        title: "Pageviews Per Second"
+      },
+      toolTip: {
+        shared: true
+      },
+      data: [{
+        type: "line",
+        name: "Pageviews",
+        xValueFormatString: "MMM DD, YYYY HH:mm:ss",
+        xValueType: "dateTime",
+        dataPoints : dataPoints
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(currentDate.getTime() - (90 * 1000))
+      },
+      axisX: {
+        labelFontColor: "white"
+      }
+    },
+    rangeSelector: {
+      enabled: false
+    }
+  });
+  var dataCount = 700, ystart = 50, interval = 1000, xstart = (currentDate.getTime() - (700 * 1000));
+  updateChart(xstart, ystart, dataCount, interval);
+  function updateChart(xstart, ystart, length, interval) {
+    var xVal = xstart, yVal = ystart;
+    for(var i = 0; i < length; i++) {
+      yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+      yVal = Math.min(Math.max(yVal, 5), 90);
+      dataPoints.push({x: xVal,y: yVal});
+      xVal += interval;
+    }
+    if(!rangeChangedTriggered) {
+        stockChart.options.navigator.slider.minimum = new Date(xVal - (90 * 1000)) ;
+    }
+    xstart = xVal;
+    dataCount = 1;
+    ystart = yVal;
+    stockChart.render();
+    setTimeout(function() { updateChart(xstart, ystart, dataCount, interval); }, 1000);
+  }
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 400px; width: 100%;margin-left: 15px;margin-top: 300px;"></div>
+
+</body>
+</html>
+  
+
+
+      <script>
+        let sidebar = document.querySelector(".sidebar");
+     let sidebarBtn = document.querySelector(".sidebarBtn");
+     sidebarBtn.onclick = function() {
+       sidebar.classList.toggle("active");
+       if(sidebar.classList.contains("active")){
+       sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+     }else
+       sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+     }
+      </script>
+     
+     </body>
+     </html>

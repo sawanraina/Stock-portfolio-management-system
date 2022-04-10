@@ -1,0 +1,425 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!----Coded by Seoni-->
+<html lang="en">
+<head>
+    <title>Home |Stock Portfolio</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <script src="https://kit.fontawesome.com/ea4e4d190f.js" crossorigin="anonymous"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+    <script type="text/javascript">
+    window.onload = function () {
+      var dataPoints = [], currentDate = new Date(), rangeChangedTriggered = false;
+      var stockChart = new CanvasJS.StockChart("chartContainer",{
+        theme: "dark1", //"light2", "dark1", "dark2"
+        title:{
+          text:"Dynamic StockChart"
+        },
+        rangeChanged: function(e) {
+            rangeChangedTriggered = true;
+        },
+        charts: [{
+          axisX: {
+            crosshair: {
+              enabled: true,
+              valueFormatString: "MMM DD, YYYY HH:mm:ss"
+            }
+          },
+          axisY: {
+            title: "Pageviews Per Second"
+          },
+          toolTip: {
+            shared: true
+          },
+          data: [{
+            type: "line",
+            name: "Pageviews",
+            xValueFormatString: "MMM DD, YYYY HH:mm:ss",
+            xValueType: "dateTime",
+            dataPoints : dataPoints
+          }]
+        }],
+        navigator: {
+          slider: {
+            minimum: new Date(currentDate.getTime() - (90 * 1000))
+          },
+          axisX: {
+            labelFontColor: "white"
+          }
+        },
+        rangeSelector: {
+          enabled: false
+        }
+      });
+      var dataCount = 700, ystart = 50, interval = 1000, xstart = (currentDate.getTime() - (700 * 1000));
+      updateChart(xstart, ystart, dataCount, interval);
+      function updateChart(xstart, ystart, length, interval) {
+        var xVal = xstart, yVal = ystart;
+        for(var i = 0; i < length; i++) {
+          yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+          yVal = Math.min(Math.max(yVal, 5), 90);
+          dataPoints.push({x: xVal,y: yVal});
+          xVal += interval;
+        }
+        if(!rangeChangedTriggered) {
+            stockChart.options.navigator.slider.minimum = new Date(xVal - (90 * 1000)) ;
+        }
+        xstart = xVal;
+        dataCount = 1;
+        ystart = yVal;
+        stockChart.render();
+        setTimeout(function() { updateChart(xstart, ystart, dataCount, interval); }, 1000);
+      }
+    }
+    </script>
+    </head>
+<body>
+ <!--------------------Nav Side Bar--> 
+    <div class="sidebar">
+		<div class="logo-details">
+		  <i class="bi bi-bar-chart-line-fill"></i>
+		  <span class="logo_name">Stock Portfolio</span>
+		</div>
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'index' %}">
+          <i class='bx bxs-home' ></i>
+          <span class="links_name">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'news' %}">
+          <i class='bx bx-box' ></i>
+          <span class="links_name">News</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-list-ul' ></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'addportfolio' %}">
+          <i class='bx bx-user-plus'></i>
+          <span class="links_name">Add Portfolio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'stock' %}">
+          <i class='bx bx-coin-stack' ></i>
+          <span class="links_name">Stock</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mutualfunds' %}">
+          <i class='bx bx-pie-chart-alt-2' ></i>
+          <span class="links_name">Mutual Funds</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'watchlist' %}">
+          <i class='bx bx-book-alt' ></i>
+          <span class="links_name">Watch List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'settings' %}">
+          <i class='bx bx-cog' ></i>
+          <span class="links_name">Setting</span>
+        </a>
+      </li>
+      <li class="log_out">
+        <a href="#">
+          <i class='bx bx-log-out'></i>
+          <span class="links_name">Log out</span>
+        </a>
+      </li>
+    </ul>
+</div>
+  <!--------------------------Home section-->
+	  <section class ="home-section">
+		<nav>
+		  <div class="sidebar-button">
+			<i class='bx bx-menu sidebarBtn'></i>
+			<span class="dashboard">Home</span>
+		  </div>
+      <div class="login-btn">
+        <a href="{% url 'login' %}" class="btn">Login/Sign Up</a>
+      </div>
+		</nav> 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+<!----------------------Header----->
+<div class="headlines">
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="others-box">
+        <h3 class="headline-title">{{article.title}}</h3>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h2><strong>The weak participation by employees in Zomato IPO a reason to worry?</strong></h2>
+          <p>The Centre is confident of meeting the ambitious divestment target of Rs 1.75 lakh crore through share sales in Air India and other companies, including the Life Insurance Corporation IPO, which is expected to be India’s largest..</p>
+        
+        <img src="{% static 'images/8.jpg' %}" alt="img-1"><br>
+
+        <ul>
+        <li><strong>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</strong></li>
+        <li><strong> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</strong></li>
+        <li><strong> Nifty drop 1%; here are 4 factors behind the fall</strong></li>
+        </ul>
+
+        </div>
+
+        <div class="col">
+          <h4><u><strong>In Focus</strong></u></h4>
+          <h3><strong>Wipro to invest $1 billion over next 3 years to expand cloud transformation capability</strong></h3>
+          <ul>
+            <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</li>
+            <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li>
+            <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+            <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</li>
+            </ul>
+    <br>
+
+            <h4><u><strong> In The News</strong></u></h4>
+          <h3><strong>Wipro to invest $1 billion over next 3 years to expand cloud transformation capability</strong></h3>
+          <ul>
+            <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</li>
+            <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li>
+            <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+            <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+            </ul>
+            </div>
+
+
+        <div class="col">
+          <h3><strong>Market Status</strong></h3>
+          <div id="chartContainer" style="height: 250px; width: 100%;"></div>
+<br>
+            <div class="col">
+              <a href="#"><img src="https://images.moneycontrol.com/static-mcnews/2021/07/Prime_Day.jpg?impolicy=website&width=306&height=172" alt=""></a>
+                </div>
+</div>
+            </div>
+            </div>
+
+
+
+   
+<!-----------Help-->
+<div class="container">
+  <h2>How May We Help You!</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Want to Start Investing?</h3>
+      <p>We work on the principle of Value investing,<br> guiding you through the steps to grow and create wealth in long time by planning <br>your Financial portfolio and goals.</p>
+    </div>
+
+    <div class="col-md-6">
+      <div class="others-box">
+        <img src=https://image.freepik.com/free-photo/dollar-money-bag-magnifying-glass-financial-audit-origin-capital-legality-funds_72572-1543.jpg alt="">
+      </div>
+      <h4>Idealogy</h4>
+    </div>
+
+    <div class="col-md-6">
+      <div class="others-box">
+        <img src="https://img.freepik.com/free-photo/concept-business-strategy-action-plan-hand-putting-wooden-cube-block-stacking-with-icon_20693-307.jpg?size=338&ext=jpg" alt="">
+      </div>
+      <h4>Master Plan</h4>
+    </div>
+
+    <div class="col-md-6">
+      <div class="others-box">
+        <img src="https://image.freepik.com/free-photo/hand-male-female-putting-coins-money-bag-with-coin-stack-step-growing-growth-saving-money-concept-finance-business-investment_20693-157.jpg" alt="">
+      </div>
+      <h4>Funds</h4>
+    </div>
+
+  </div>
+</div>
+
+
+   
+
+
+<!---Bookmark-->
+<div class="bookmark">
+  <div class="row">
+    <div class="col-2">
+      <img src="https://image.freepik.com/free-vector/indian-rupee-money-bag_23-2147993757.jpg">
+      </div>
+      <div class="col-2">
+      <h2>Stay on Track with your financial goals</h2>
+      <h3>Solutions with the right balance of human intelligence and technology to keep you on track of your goals,<br>
+         especially during market volatilit</h3>
+    </div>
+  </div>
+</div>
+
+<!------Promoted Content-->
+<div class="news-section">
+	<div class="container">
+		<h2>Promoted Content</h2>
+		<div class="row">
+			<div class="column-20">
+				<div class="news">
+					<div class="news-image"><img src="{% static 'images/13.jpg' %}"></div>
+					<h2><a href="#">Inflation worries: Will RBI bite rate-hike bullet and puncture market sentiment?</a></h2>
+				</div>
+			</div>
+
+			<div class="column-20">
+				<div class="news">
+					<div class="news-image"><img src="{% static 'images/13.jpg' %}"></div>
+					<h2><a href="#">Inflation worries: Will RBI bite rate-hike bullet and puncture market sentiment?</a></h2>
+				</div>
+			</div>
+
+			<div class="column-20">
+				<div class="news">
+					<div class="news-image"><img src="{% static 'images/13.jpg' %}"></div>
+					<h2><a href="#">Inflation worries: Will RBI bite rate-hike bullet and puncture market sentiment?</a></h2>
+				</div>
+			</div>
+
+			<div class="column-20">
+				<div class="news">
+					<div class="news-image" ><img src="{% static 'images/13.jpg' %}"></div>
+					<h2><a href="#">Inflation worries: Will RBI bite rate-hike bullet and puncture market sentiment?</a></h2>
+				</div>
+			</div>
+
+			<div class="column-20">
+				<div class="news">
+					<div class="news-image"> <img src="{% static 'images/13.jpg' %}">
+          </div>
+					<h2><a href="#">Inflation worries: Will RBI bite rate-hike bullet and puncture market sentiment?</a></h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!----------more news-->
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <h2>MARKET</h2>
+      <img src="{% static 'images/8.jpg' %}" alt="img-1"><br>
+    <ul>
+    <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</li><br>
+    <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li><br>
+    <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+    </ul>
+
+    </div>
+
+    <div class="col-md-3">
+      <h2>STOCKS</h2>
+      <img src="{% static 'images/8.jpg' %}" alt="img-1"><br>
+    <ul>
+    <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</strong></li><br>
+    <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li><br>
+    <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+    </ul>
+
+    </div>
+
+    <div class="col-md-3">
+      <h2>STARTUP</h2>
+      <img src="{% static 'images/8.jpg' %}" alt="img-1"><br>
+    <ul>
+    <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</li><br>
+    <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li><br>
+    <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+    </ul>
+
+    </div>
+
+    <div class="col-md-3">
+      <h2>COMMODITIES</h2>
+      <img src="{% static 'images/8.jpg' %}" alt="img-1"><br>
+    <ul>
+    <li>Multiple Adani group companies being investigated by SEBI & DRI, Finance Ministry tells Parliament</strong></li><br>
+    <li> Tech Q1 profit rises 10% YoY to Rs 3,214 crore, revenue comes in at Rs 20,068 crore</li><br>
+    <li> Nifty drop 1%; here are 4 factors behind the fall</li>
+    </ul>
+
+    </div>
+  </div>
+</div>
+
+
+<!-----------go to top-->
+<button onclick="topFunction()" id="myBtn" title="Go to top">Go To Top</button>
+<!-----Footer =======================---> 
+<div class="footer"> 
+  <div class="container">
+  <div class="row">
+    <hr>
+    <div class="copyright">&copy;stock<strong><span>portfolio</span></strong>.all rights reserved</div>
+    </div>
+    </div>
+</div>
+</div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+  
+
+    <script>
+      let sidebar = document.querySelector(".sidebar");
+   let sidebarBtn = document.querySelector(".sidebarBtn");
+   sidebarBtn.onclick = function() {
+     sidebar.classList.toggle("active");
+     if(sidebar.classList.contains("active")){
+     sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+   }else
+     sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+   }
+      //Get the button
+      var mybutton = document.getElementById("myBtn");
+      
+      // When the user scrolls down 20px from the top of the document, show the button
+      window.onscroll = function() {scrollFunction()};
+      
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
+      }
+      
+      // When the user clicks on the button, scroll to the top of the document
+      function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+      </script>
+</body>
+</html>

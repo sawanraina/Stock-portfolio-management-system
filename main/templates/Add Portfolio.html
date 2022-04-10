@@ -1,0 +1,149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<!-- code by Sawan Raina -->
+<html lang="en" dir="ltr">
+    <meta charset="UTF-8">
+    <title> Add Portfolio </title>
+    <link rel="stylesheet" href="{% static 'css/Add.css' %}">
+    <!-- Boxicons CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+
+  {% csrf_token %}
+  <div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bx-bar-chart-alt'></i>
+      <span class="logo_name">Stock Portfolio</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a href="{% url 'index' %}">
+          <i class='bx bxs-home' ></i>
+          <span class="links_name">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'news' %}">
+          <i class='bx bx-box' ></i>
+          <span class="links_name">News</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-list-ul' ></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'addportfolio' %}">
+          <i class='bx bx-user-plus'></i>
+          <span class="links_name">Add Portfolio</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'stock' %}">
+          <i class='bx bx-coin-stack' ></i>
+          <span class="links_name">Stock</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'mutualfunds' %}">
+          <i class='bx bx-pie-chart-alt-2' ></i>
+          <span class="links_name">Mutual Funds</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'watchlist' %}">
+          <i class='bx bx-book-alt' ></i>
+          <span class="links_name">Watch List</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'settings' %}">
+          <i class='bx bx-cog' ></i>
+          <span class="links_name">Setting</span>
+        </a>
+      </li>
+      <li class="log_out">
+        <a href="#">
+          <i class='bx bx-log-out'></i>
+          <span class="links_name">Log out</span>
+        </a>
+      </li>
+    </ul>
+</div>
+  <section class="home-section">
+    <nav>
+      <div class="sidebar-button">
+        <i class='bx bx-menu sidebarBtn'></i>
+        <span class="dashboard">Add Portfolio</span>
+      </div>
+      <div class="profile-details">
+        <span class="admin_name"></span>
+        <i class='bx bx-chevron-down' ></i>
+      </div>
+    </nav>
+
+    
+    <div class="home-content portfolio">
+      <div class="overview-boxes">
+        <div class="box">
+          <div class="right-side">
+            <form>
+              <div class="col-12">
+                <div class="text">Enter the Name of Portfolio
+              </div>
+              </div>
+              
+
+              <div class="button">
+                <input type="text" placeholder="Add Portfolio.." id="portfolioname">
+                <button onclick="return addportfolio()">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+      let sidebar = document.querySelector(".sidebar");
+       let sidebarBtn = document.querySelector(".sidebarBtn");
+       sidebarBtn.onclick = function() {
+         sidebar.classList.toggle("active");
+         if(sidebar.classList.contains("active")){
+         sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+       }else
+         sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+       }
+
+
+       function addportfolio(){
+        var portfolioname = document.getElementById("portfolioname").value;
+
+        csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        $.ajax({
+            type:"POST",
+            url:'{% url 'addportfolioname' %}',
+            data:{
+              'csrfmiddlewaretoken': csrfmiddlewaretoken,
+              'portfolioname':portfolioname,
+            },
+            success :function(data){
+                if(data.success){
+					        console.log(data.success);
+                }else{
+					        console.log(data.error);
+                }
+            }
+        })
+		    return false;
+       }
+    </script>
+     </body>
+     </html>
